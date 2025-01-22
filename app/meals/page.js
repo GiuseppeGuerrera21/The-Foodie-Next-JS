@@ -1,16 +1,35 @@
 import Link from "next/link";
+import classes from './page.module.css';
+import MealsGrid from "@/components/meals/meals-grid";
+import { getMeals } from "@/lib/meals";
+import { Suspense } from "react";
 
-export default function Meals() {
+async function Meals() {
+    const meals = await getMeals();
+    return <MealsGrid meals={meals} />
+}
+
+export default function MealsPage() {
+
     return (
-        <main style={{ color: 'white', textAlign: 'center' }}>
-            <h1>
-                Time to get started!
-            </h1>
-            <p>Piatti Italiani</p>
-            <p><Link href='/meals/slug-1'>Pasto 1</Link></p>
-            <p><Link href='/meals/slug-2'>Pasto 2</Link></p>
-            <p><Link href='/meals/slug-3'>Pasto 3</Link></p>
-            <p><Link href='/meals/slug-4'>Pasto 4</Link></p>
-        </main>
+        <>
+            <header className={classes.header}>
+                <h1>
+                    Delicious meals, created
+                    <span className={classes.highlight}></span>
+                </h1>
+                <p>Delicious meals, created by a food-loving community.</p>
+                <p className={classes.cta}>
+                    <Link href='/meals/share'>
+                        Share Your Favourite Recipe
+                    </Link>
+                </p>
+            </header>
+            <main className={classes.main}>
+                <Suspense fallback={<p className={classes.loading}>Fetching meals...</p>}>
+                    <Meals />
+                </Suspense>
+            </main>
+        </>
     )
 }
