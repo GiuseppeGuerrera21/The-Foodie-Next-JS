@@ -2,9 +2,28 @@ import Image from "next/image";
 
 import { getMeal } from "@/lib/meals";
 import classes from "./page.module.css";
+import { notFound } from "next/navigation";
+
+export async function generateMetadata({params}) {
+    const meal = getMeal(params.mealslug);
+
+    if (!meal) {
+        notFound();
+    }
+
+    return{
+        title: meal.title, 
+        description: meal.summary
+    }
+    
+}
 
 export default function SomeMeals({params}) {
     const meal = getMeal(params.mealslug);
+
+    if (!meal) {
+        notFound();
+    }
 
     meal.instructions = meal.instructions.replace(/\n/g, '<br />');
 
